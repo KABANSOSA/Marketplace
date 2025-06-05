@@ -4,21 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  imageUrl: string;
-  specifications: {
-    manufacturer: string;
-    catalogNumber: string;
-    applicability: string;
-    dimensions?: string;
-  };
-}
+import { Product } from '@/types/product';
 
 interface ProductCardProps {
   product: Product;
@@ -57,11 +43,11 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
         
         <p className="text-sm text-gray-500 mb-2">
-          {product.specifications.manufacturer}
+          {product.specifications['Производитель']}
         </p>
         
         <p className="text-sm text-gray-500 mb-4">
-          Артикул: {product.specifications.catalogNumber}
+          Артикул: {product.specifications['Номер по каталогу']}
         </p>
         
         <div className="flex justify-between items-center">

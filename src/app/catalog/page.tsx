@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ProductCard } from '@/components/ProductCard';
 import { products } from '@/mocks/products';
+import { Product } from '@/types/product';
 
 interface Category {
   id: string;
