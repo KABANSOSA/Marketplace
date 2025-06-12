@@ -17,7 +17,7 @@ git commit -m "Deploy to GitHub Pages"
 
 # Add GitHub repository as remote if not already added
 if (-not (git remote -v | Select-String "origin")) {
-    git remote add origin https://github.com/KABANSOSA/marketplace.git
+    git remote add origin https://github.com/KABANSOSA/Marketplace_OLD.git
 }
 
 # Push to gh-pages branch
