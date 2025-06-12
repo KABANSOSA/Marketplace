@@ -1,16 +1,8 @@
 # Build the project
 npm run build
 
-# Create out directory if it doesn't exist
-if (-not (Test-Path "out")) {
-    New-Item -ItemType Directory -Path "out"
-}
-
-# Copy build files to out directory
-Copy-Item -Path "out/*" -Destination "out" -Recurse -Force
-
-# Create .nojekyll file
-New-Item -ItemType File -Path "out/.nojekyll" -Force
+# Create .nojekyll file to prevent GitHub Pages from processing the site
+New-Item -Path "out/.nojekyll" -ItemType File -Force
 
 # Initialize git repository if not already initialized
 if (-not (Test-Path ".git")) {
@@ -23,11 +15,10 @@ git add .
 # Commit changes
 git commit -m "Deploy to GitHub Pages"
 
-# Add GitHub Pages remote if not already added
-$remoteUrl = "https://github.com/KABANSOSA/Marketplace_OLD.git"
-if (-not (git remote get-url origin)) {
-    git remote add origin $remoteUrl
+# Add GitHub repository as remote if not already added
+if (-not (git remote -v | Select-String "origin")) {
+    git remote add origin https://github.com/KABANSOSA/marketplace.git
 }
 
 # Push to gh-pages branch
-git push origin main:gh-pages --force 
+git push origin gh-pages --force 
