@@ -7,33 +7,36 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next build && next export",
-    "deploy": "npm run build && touch out/.nojekyll && git add out/ && git commit -m \"Deploy to gh-pages\" && git subtree push --prefix out origin gh-pages"
+    "deploy": "powershell -ExecutionPolicy Bypass -File deploy.ps1"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.80.6",
-    "@vercel/analytics": "^1.5.0",
-    "@vercel/speed-insights": "^1.0.0",
-    "axios": "^1.9.0",
-    "date-fns": "^4.1.0",
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
+    "autoprefixer": "^10.4.17",
+    "axios": "^1.6.7",
+    "chart.js": "^4.4.1",
+    "clsx": "^2.1.0",
     "lucide-react": "^0.331.0",
-    "next": "14.1.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-dropzone": "^14.3.8",
-    "react-hot-toast": "^2.5.2",
-    "recharts": "^2.15.3"
+    "next": "14.2.30",
+    "next-themes": "^0.2.1",
+    "postcss": "^8.4.35",
+    "react": "^18",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.50.1",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss": "^3.4.1",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node": "20.11.19",
-    "@types/react": "18.2.57",
-    "@types/react-dom": "18.2.19",
-    "autoprefixer": "^10.4.17",
-    "eslint": "8.56.0",
-    "eslint-config-next": "14.1.0",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
-    "typescript": "5.3.3"
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.30",
+    "typescript": "^5"
   },
   "engines": {
     "node": ">=18.0.0"

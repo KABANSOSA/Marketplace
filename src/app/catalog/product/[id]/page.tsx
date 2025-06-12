@@ -1,189 +1,80 @@
-'use client';
-
-import { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { ShoppingCart, Heart, Truck, Shield, Clock, Star } from 'lucide-react';
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  oldPrice?: number;
-  image: string;
-  category: string;
-  specifications: {
-    [key: string]: string;
-  };
-  inStock: boolean;
-  isNew?: boolean;
-  discount?: number;
-  rating: number;
-  reviews: number;
-}
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import ProductContent from './ProductContent';
 
 // Временные данные для демонстрации
-const product: Product = {
-  id: 1,
-  name: 'iPhone 14 Pro',
-  description: 'Новейший iPhone с революционной камерой и процессором A16 Bionic. Дисплей Super Retina XDR с технологией ProMotion и Always-On. Титановый корпус и улучшенная защита от воды и пыли.',
-  price: 89990,
-  oldPrice: 99990,
-  image: 'https://via.placeholder.com/800x600?text=iPhone+14+Pro',
-  category: 'Электроника',
-  specifications: {
-    'Процессор': 'A16 Bionic',
-    'Дисплей': '6.1" Super Retina XDR',
-    'Камера': '48 Мп + 12 Мп + 12 Мп',
-    'Батарея': '3200 мАч',
-    'Память': '256 ГБ',
-    'Цвет': 'Титановый'
+const products = [
+  {
+    id: 1,
+    name: 'Гидроцилиндр подъема',
+    description: 'Высококачественный гидроцилиндр для спецтехники. Изготовлен из прочных материалов, обеспечивает надежную работу в любых условиях.',
+    price: 15000,
+    oldPrice: 18000,
+    image: 'https://via.placeholder.com/300x200?text=Гидроцилиндр',
+    category: 'hydraulics',
+    specifications: {
+      'Диаметр': '100 мм',
+      'Ход': '500 мм',
+      'Давление': '20 МПа',
+      'Материал': 'Сталь',
+    },
+    inStock: true,
+    isNew: true,
+    discount: 15,
+    rating: 4.8,
+    reviews: 12
   },
-  inStock: true,
-  isNew: true,
-  discount: 10,
-  rating: 4.8,
-  reviews: 12
-};
+  {
+    id: 2,
+    name: 'Двигатель Cummins',
+    description: 'Мощный и надежный двигатель Cummins для спецтехники. Отличное соотношение цена/качество.',
+    price: 250000,
+    oldPrice: 280000,
+    image: 'https://via.placeholder.com/300x200?text=Двигатель',
+    category: 'engines',
+    specifications: {
+      'Мощность': '300 л.с.',
+      'Объем': '6.7 л',
+      'Топливо': 'Дизель',
+      'Норма': 'Евро-5',
+    },
+    inStock: true,
+    isNew: false,
+    discount: 10,
+    rating: 4.9,
+    reviews: 8
+  },
+];
 
-export default function ProductPage() {
-  const [quantity, setQuantity] = useState(1);
-  const [isFavorite, setIsFavorite] = useState(false);
+export async function generateStaticParams() {
+  return products.map((product) => ({
+    id: product.id.toString(),
+  }));
+}
 
-  const handleAddToCart = () => {
-    // Реализовать добавление в корзину
-    console.log('Добавлено в корзину:', { product, quantity });
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const product = products.find((p) => p.id.toString() === params.id);
+  if (!product) {
+    return {
+      title: 'Товар не найден',
+    };
+  }
+
+  return {
+    title: `${product.name} - Каталог запчастей`,
+    description: product.description,
   };
+}
 
-  return (
-    <main className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Изображение товара */}
-        <div className="relative h-[400px] rounded-lg overflow-hidden">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-          />
-          {product.isNew && (
-            <span className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
-              Новинка
-            </span>
-          )}
-          {product.discount && (
-            <span className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm">
-              -{product.discount}%
-            </span>
-          )}
-        </div>
+export default function ProductPage({ params }: { params: { id: string } }) {
+  const product = products.find((p) => p.id.toString() === params.id);
+  if (!product) {
+    notFound();
+  }
 
-        {/* Информация о товаре */}
-        <div>
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center">
-                  <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                  <span className="ml-1 text-gray-600">
-                    {product.rating} ({product.reviews} отзывов)
-                  </span>
-                </div>
-                <span className="text-gray-500">|</span>
-                <span className="text-gray-600">Категория: {product.category}</span>
-              </div>
-            </div>
-            <button
-              onClick={() => setIsFavorite(!isFavorite)}
-              className="p-2 rounded-full hover:bg-gray-100"
-            >
-              <Heart
-                className={`w-6 h-6 ${
-                  isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'
-                }`}
-              />
-            </button>
-          </div>
-
-          <p className="text-gray-600 mb-6">{product.description}</p>
-
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Технические характеристики
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              {Object.entries(product.specifications).map(([key, value]) => (
-                <div key={key} className="bg-gray-50 p-3 rounded-lg">
-                  <span className="text-gray-600">{key}:</span>
-                  <span className="ml-2 font-medium">{value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 pt-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <span className="text-3xl font-bold text-gray-900">
-                  {product.price.toLocaleString('ru-RU')} ₽
-                </span>
-                {product.oldPrice && (
-                  <span className="ml-2 text-gray-500 line-through">
-                    {product.oldPrice.toLocaleString('ru-RU')} ₽
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50"
-                >
-                  -
-                </button>
-                <span className="text-lg font-medium">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              <span>Добавить в корзину</span>
-            </button>
-          </div>
-
-          {/* Преимущества */}
-          <div className="mt-8 grid grid-cols-3 gap-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Truck className="w-5 h-5 text-blue-600" />
-              </div>
-              <span className="text-sm text-gray-600">Быстрая доставка</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Shield className="w-5 h-5 text-blue-600" />
-              </div>
-              <span className="text-sm text-gray-600">Гарантия качества</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Clock className="w-5 h-5 text-blue-600" />
-              </div>
-              <span className="text-sm text-gray-600">В наличии</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
+  return <ProductContent product={product} />;
 } 
